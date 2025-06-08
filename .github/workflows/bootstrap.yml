@@ -1,0 +1,64 @@
+name: Initial set up 
+
+on:
+    workflow_dispatch:
+      inputs:
+        stage:
+          description: 'Environment stage'
+          required: true
+          default: 'prod'
+        appname:
+            description: 'Application name'
+            required: true
+            default: 'greetings'
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    permissions:
+        id-token: write
+        contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configure AWS credentials (temporary)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy OIDC Role
+        run: |
+          npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/bootstrap.ts" \
+          --require-approval never \
+          --context stage=${{ github.event.inputs.stage }} \
+          --context appname=${{ github.event.inputs.appname }} \
+          --context github_repository=${{ github.repository }}
+
+      - name: Assume Role with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ env.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
+          role-session-name: GitHubActions
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: CDK bootstrap
+        run: npx cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_REGION
+
+      - name: Deploy Code bucket
+        working-directory: ./${{ vars.CDK_DIR }}
+        run: |
+          npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/bootstrap.ts" \
+          --require-approval never \
+          --context stage=${{ github.event.inputs.stage }} \
+          --context appname=${{ github.event.inputs.appname }}
