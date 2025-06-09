@@ -38,6 +38,11 @@ jobs:
         working-directory: ./${{ vars.CDK_DIR }}
         run: npm ci
 
+      - name: CDK bootstrap
+        working-directory: ./${{ vars.CDK_DIR }}
+        run: npx cdk bootstrap aws://${{ vars.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
+
+
       - name: Deploy OIDC Role
         working-directory: ./${{ vars.CDK_DIR }}
         run: |
@@ -47,14 +52,13 @@ jobs:
           --context appname=${{ github.event.inputs.appname }} \
           --context github_repository=${{ github.repository }}
 
-      - name: Assume Role with OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ vars.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
-          role-session-name: GitHubActions
-          aws-region: ${{ vars.AWS_REGION }}
 
-      - name: CDK bootstrap
-        working-directory: ./${{ vars.CDK_DIR }}
-        run: npx cdk bootstrap aws://${{ vars.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
+    #   - name: Assume Role with OIDC
+    #     uses: aws-actions/configure-aws-credentials@v4
+    #     with:
+    #       role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ vars.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
+    #       role-session-name: GitHubActions
+    #       aws-region: ${{ vars.AWS_REGION }}
+
+
 
