@@ -58,10 +58,3 @@ jobs:
         working-directory: ./${{ vars.CDK_DIR }}
         run: npx cdk bootstrap aws://${{ vars.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
 
-    #   - name: Deploy Code bucket
-    #     working-directory: ./${{ vars.CDK_DIR }}
-    #     run: |
-    #       npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/bootstrap.ts" \
-    #       --require-approval never \
-    #       --context stage=${{ github.event.inputs.stage }} \
-    #       --context appname=${{ github.event.inputs.appname }}

@@ -61,12 +61,6 @@ jobs:
         cd $CDK_DIR
         npx cdk deploy --all --require-approval never --context stage=${{ github.event.inputs.stage }} --outputs-file ../cdk-outputs.json
 
-    - name: Clean frontend build
-      working-directory: ${{ env.FRONTEND_DIR }}
-      run: |
-        echo "REACT_APP_API_URL=" > .env.production
-        rm -rf build
-        npm run build
 
     - name: Get S3 bucket name
       run: |
