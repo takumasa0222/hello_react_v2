@@ -1,0 +1,78 @@
+name: Deploy CDK + React (dev/prod)
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Environment stage'
+        required: true
+        default: 'prod'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Skip deploy
+      run: |
+        echo "Skipping deployment..."
+        exit 0
+          
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    - name: Load constants from .env.deploy
+      run: |
+        while IFS='=' read -r key value; do
+          echo "$key=$value" >> "$GITHUB_ENV"
+        done < .env.deploy
+
+    - name: Install dependencies
+      run: |
+        cd $CDK_DIR && npm ci
+        cd ../$FRONTEND_DIR && npm ci
+        cd ../$BACKEND_DIR && npm ci
+
+    - name: Build backend
+      run: cd $BACKEND_DIR && npm run build
+
+    - name: Assume Role with OIDC
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.CDK_ROLE_NAME }}
+        role-session-name: GitHubActions
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Bootstrap CDK environment
+      run: |
+        cd $CDK_DIR
+        npx cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_REGION --context stage=${{ github.event.inputs.stage }}
+
+    - name: Deploy infrastructure via CDK
+      run: |
+        cd $CDK_DIR
+        npx cdk deploy --all --require-approval never --context stage=${{ github.event.inputs.stage }} --outputs-file ../cdk-outputs.json
+
+
+    - name: Get S3 bucket name
+      run: |
+        STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
+        echo "Detected STACK_NAME: $STACK_NAME"
+        BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
+        echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+        cat cdk-outputs.json
+
+    - name: Upload React build to S3
+      run: |
+        aws s3 sync $FRONTEND_DIR/build s3://$BUCKET_NAME --delete --region $AWS_REGION
+
+    - name: Finish
+      run: echo "Deployment complete for stage ${{ github.event.inputs.stage }}"

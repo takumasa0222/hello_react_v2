@@ -1,4 +1,4 @@
-name: Deploy CDK + React (dev/prod)
+name: Entire flow Deployment (CDK + React)
 
 on:
   workflow_dispatch:
@@ -7,6 +7,10 @@ on:
         description: 'Environment stage'
         required: true
         default: 'prod'
+      appname:
+        description: 'Application name'
+        required: true
+        default: 'greetings'
 
 jobs:
   deploy:
@@ -16,63 +20,79 @@ jobs:
       contents: read
 
     steps:
-    - name: Skip deploy
-      run: |
-        echo "Skipping deployment..."
-        exit 0
-          
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '22'
 
-    - name: Load constants from .env.deploy
-      run: |
-        while IFS='=' read -r key value; do
-          echo "$key=$value" >> "$GITHUB_ENV"
-        done < .env.deploy
-
     - name: Install dependencies
       run: |
-        cd $CDK_DIR && npm ci
-        cd ../$FRONTEND_DIR && npm ci
-        cd ../$BACKEND_DIR && npm ci
+        cd ${{ vars.CDK_DIR }} && npm ci
+        cd ../${{ vars.FRONTEND_DIR }} && npm ci
+        cd ../${{ vars.BACKEND_DIR }} && npm ci
 
     - name: Build backend
-      run: cd $BACKEND_DIR && npm run build
+      run: cd ${{ vars.BACKEND_DIR }} && npm run build && npm run zip
 
     - name: Assume Role with OIDC
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.CDK_ROLE_NAME }}
-        role-session-name: GitHubActions
-        aws-region: ${{ env.AWS_REGION }}
+       role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ vars.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
+       role-session-name: GitHubActions
+       aws-region: ${{ vars.AWS_REGION }}
 
-    - name: Bootstrap CDK environment
+    - name: Deploy backend repository
       run: |
-        cd $CDK_DIR
-        npx cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_REGION --context stage=${{ github.event.inputs.stage }}
+        cd ${{ vars.CDK_DIR }}
+        npx cdk deploy --app "npx ts-node bin/code-storage.ts" \
+        --require-approval never \
+        --context stage=${{ github.event.inputs.stage }} \
+        --context appname=${{ github.event.inputs.appname }}
+        --outputs-file ../cdk-outputs.json
+
+    - name: Get Code repo S3 bucket name
+      run: |
+        STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
+        echo "Detected Code repo STACK_NAME: $STACK_NAME"
+        REPO_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].RepoBucketName' cdk-outputs.json)
+        echo "REPO_BUCKET_NAME=$REPO_BUCKET_NAME" >> $GITHUB_ENV
+        cat cdk-outputs.json
+
+    - name: Upload and get S3 versionId
+      id: upload
+      run: |
+        OUTPUT=$(aws s3api put-object \
+          --bucket $REPO_BUCKET_NAME \
+          --key "${{ github.event.inputs.appname }}/${{ github.event.inputs.stage }}/lambda-backend.zip" \
+          --body "${{ vars.BACKEND_DIR }}/lambda-backend.zip" \
+          --output json)
+        VERSION_ID=$(echo "$OUTPUT" | jq -r '.VersionId')
+        echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
 
     - name: Deploy infrastructure via CDK
       run: |
-        cd $CDK_DIR
-        npx cdk deploy --all --require-approval never --context stage=${{ github.event.inputs.stage }} --outputs-file ../cdk-outputs.json
+        cd ${{ vars.CDK_DIR }}
+        npx cdk deploy --all \
+        --require-approval never \
+        --context stage=${{ github.event.inputs.stage }} \
+        --context appname=${{ github.event.inputs.appname }} \
+        --context codeVersionId=${{ steps.upload.outputs.version_id }} \
+        --outputs-file ../cdk-outputs.json
 
-
-    - name: Get S3 bucket name
+    - name: Get S3 front bucket name
       run: |
-        STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
+        STACK_NAME=$(jq -r 'to_entries[] | select(.value.FrontendBucketName != null) | .key' cdk-outputs.json | head -n 1)
         echo "Detected STACK_NAME: $STACK_NAME"
-        BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
-        echo "BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+        FRONT_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
+        echo "FRONT_BUCKET_NAME=$FRONT_BUCKET_NAME" >> $GITHUB_ENV
         cat cdk-outputs.json
 
     - name: Upload React build to S3
       run: |
-        aws s3 sync $FRONTEND_DIR/build s3://$BUCKET_NAME --delete --region $AWS_REGION
+        aws s3 sync $FRONTEND_DIR/build s3://$FRONT_BUCKET_NAME --delete --region $AWS_REGION
 
     - name: Finish
-      run: echo "Deployment complete for stage ${{ github.event.inputs.stage }}"
+      run: echo "Deployment complete for app name ${{ github.event.inputs.appname }} stage ${{ github.event.inputs.stage }}"
