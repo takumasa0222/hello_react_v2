@@ -64,6 +64,15 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
         actions: ['cloudfront:*'],
         resources: ['*'],
       }),
+
+      new iam.PolicyStatement({
+        sid: 'CdkBootstrapSSMAccess',
+        actions: ['ssm:GetParameter'],
+        resources: [
+          `arn:aws:ssm:${region}:${account}:parameter/cdk-bootstrap/*`,
+        ],
+      }),
+      
     ],
   });
 }
