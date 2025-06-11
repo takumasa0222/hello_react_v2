@@ -82,6 +82,10 @@ jobs:
         --context codeVersionId=${{ steps.upload.outputs.version_id }} \
         --outputs-file ../cdk-outputs.json
 
+    - name: frontend build
+      working-directory: ${{ env.FRONTEND_DIR }}
+      run: npm run build
+
     - name: Get S3 front bucket name
       run: |
         STACK_NAME=$(jq -r 'to_entries[] | select(.value.FrontendBucketName != null) | .key' cdk-outputs.json | head -n 1)
