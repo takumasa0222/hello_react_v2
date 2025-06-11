@@ -7,10 +7,10 @@ import * as cdk from 'aws-cdk-lib';
 export class BackendCodeS3Stack extends BaseS3Bucket {
     constructor(scope: Construct, id: string, props: StageStackProps) {
         super(scope, id, { ...props, purpose: S3_CONST.REPO, versioned: true });
-        new cdk.CfnOutput(this, 'RepoBucketName', {
-            value:this.bucket.bucketName,
-            exportName: `${props.appname}-BackendRepoBucket-${props.stage}`,
-        });
+        // new cdk.CfnOutput(this, 'RepoBucketName', {
+        //     value:this.bucket.bucketName,
+        //     exportName: `${props.appname}-BackendRepoBucket-${props.stage}`,
+        // });
     }
 
 }
