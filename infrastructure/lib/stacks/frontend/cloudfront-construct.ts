@@ -1,8 +1,8 @@
 import { Construct } from "constructs";
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
-import { StageStackProps } from "../types/stack-props";
-import { CLOUDFRONT } from "../constants/cloudfront.constants";
+import { StageStackProps } from "../../types/stack-props";
+import { CLOUDFRONT } from "../../constants/cloudfront.constants";
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3'
 
@@ -11,7 +11,7 @@ interface CloudFrontStackProps extends StageStackProps {
 	apiDomainName: string;
 }
 
-export class CloudFrontStack extends Construct {
+export class CloudFrontConstruct extends Construct {
 	public readonly distribution: cloudfront.Distribution;
 
 	constructor (scope: Construct, id: string, props: CloudFrontStackProps) {

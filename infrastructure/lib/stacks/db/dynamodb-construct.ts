@@ -1,10 +1,10 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
-import { StageStackProps } from '../types/stack-props';
-import { DYNAMODB } from '../constants/dynamodb.constants';
-import { createResourceName } from '../utils/naming';
+import { StageStackProps } from '../../types/stack-props';
+import { DYNAMODB } from '../../constants/dynamodb.constants';
+import { createResourceName } from '../../utils/naming';
 
-export class DynamoDBStack extends Construct {
+export class DynamoDBConstruct extends Construct {
 	public readonly table: dynamodb.Table;
 
 	constructor (scope: Construct, id: string, props: StageStackProps) {

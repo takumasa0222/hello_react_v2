@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { BackendStack } from '../stacks/backend-stack';
-import { CodeStorageStack } from '../stacks/code-storage-stack';
-import { DynamoDbStack } from '../stacks/dynamodb-stack';
+
 
 const app = new cdk.App();
 const stage = app.node.tryGetContext('stage') || 'dev';

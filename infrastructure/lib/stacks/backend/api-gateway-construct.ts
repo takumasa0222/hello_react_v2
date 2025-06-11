@@ -1,9 +1,9 @@
 import { Construct } from "constructs";
 import * as apigw from "aws-cdk-lib/aws-apigateway";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import { StageStackProps } from "../types/stack-props";
-import { API_GATEWAY } from "../constants/api-gateway.constants";
-import { createResourceName } from "../utils/naming";
+import { StageStackProps } from "../../types/stack-props";
+import { API_GATEWAY } from "../../constants/api-gateway.constants";
+import { createResourceName } from "../../utils/naming";
 // import * as logs from 'aws-cdk-lib/aws-logs';
 import * as cdk from 'aws-cdk-lib';
 
@@ -11,7 +11,7 @@ interface ApiGatwayStackProps extends StageStackProps {
 	lambdaFunction: lambda.Function;
 }
 
-export class ApiGatewayStack extends Construct {
+export class ApiGatewayConstruct extends Construct {
 	public readonly restApi: apigw.RestApi;
 
 	constructor (scope: Construct, id: string, props: ApiGatwayStackProps) {

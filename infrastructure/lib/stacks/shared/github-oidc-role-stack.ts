@@ -1,9 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { IAM } from '../constants/iam.constants';
-import { createResourceName } from '../utils/naming';
-import { createGithubActionsPolicy } from '../policies/github-actions-policy';
+import { IAM } from '../../constants/iam.constants';
+import { createResourceName } from '../../utils/naming';
+import { createGithubActionsPolicy } from '../../policies/github-actions-policy';
 
 export class GithubOidcRoleStack extends Stack {
   constructor(scope: cdk.App, id: string, props?: StackProps) {

@@ -1,9 +1,9 @@
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Duration } from 'aws-cdk-lib'
-import { StageStackProps } from '../types/stack-props';
-import { LAMBDA, LAMBDA_ENV } from '../constants/lambda.constants';
-import { createResourceName } from '../utils/naming';
+import { StageStackProps } from '../../types/stack-props';
+import { LAMBDA, LAMBDA_ENV } from '../../constants/lambda.constants';
+import { createResourceName } from '../../utils/naming';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 
@@ -12,7 +12,7 @@ interface LambdaStackProps extends StageStackProps {
 	bucket : s3.IBucket;
 }
 
-export class LambdaStack extends Construct {
+export class LambdaConstruct extends Construct {
 	public readonly fn: lambda.Function;
 	
 	constructor (scope: Construct, id: string, props: LambdaStackProps) {
