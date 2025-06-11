@@ -50,7 +50,7 @@ jobs:
         npx cdk deploy --app "npx ts-node bin/code-storage.ts" \
         --require-approval never \
         --context stage=${{ github.event.inputs.stage }} \
-        --context appname=${{ github.event.inputs.appname }}
+        --context appname=${{ github.event.inputs.appname }} \
         --outputs-file ../cdk-outputs.json
 
     - name: Get Code repo S3 bucket name
