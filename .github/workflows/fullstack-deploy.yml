@@ -96,7 +96,7 @@ jobs:
 
     - name: Upload React build to S3
       run: |
-        aws s3 sync $FRONTEND_DIR/build s3://$FRONT_BUCKET_NAME --delete --region $AWS_REGION
+        aws s3 sync ${{ vars.FRONTEND_DIR }}/build s3://$FRONT_BUCKET_NAME --delete --region $AWS_REGION
 
     - name: Finish
       run: echo "Deployment complete for app name ${{ github.event.inputs.appname }} stage ${{ github.event.inputs.stage }}"
