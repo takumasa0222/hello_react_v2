@@ -52,13 +52,15 @@ jobs:
           --context appname=${{ github.event.inputs.appname }} \
           --context github_repository=${{ github.repository }}
 
+      - name: CDK bootstrap --trust (re-run with trust to OIDC role)
+        working-directory: ./${{ vars.CDK_DIR }}
+        run: |
+          npx cdk bootstrap \
+          --trust ${{
+            format('github.com/{0}', github.repository)
+          }} \
+          aws://${{ vars.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
 
-    #   - name: Assume Role with OIDC
-    #     uses: aws-actions/configure-aws-credentials@v4
-    #     with:
-    #       role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ vars.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
-    #       role-session-name: GitHubActions
-    #       aws-region: ${{ vars.AWS_REGION }}
 
 
 
