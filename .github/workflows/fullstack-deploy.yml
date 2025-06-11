@@ -83,7 +83,7 @@ jobs:
         --outputs-file ../cdk-outputs.json
 
     - name: frontend build
-      working-directory: ${{ env.FRONTEND_DIR }}
+      working-directory: ${{ vars.FRONTEND_DIR }}
       run: npm run build
 
     - name: Get S3 front bucket name
