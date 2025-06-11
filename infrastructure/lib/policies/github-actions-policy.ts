@@ -7,7 +7,8 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
   const region = Stack.of(stack).region;
   const account = Stack.of(stack).account;
 
-  const bucketName = createResourceName(appname, S3.BASE_NAME, stage);
+  const frontendBucketName = createResourceName(appname, S3.FRONTEND, stage);
+  const repoBucketName = createResourceName(appname, S3.REPO, stage);
   const tableName = createResourceName(appname, DYNAMODB.BASE_NAME, stage);
   const lambdaName = createResourceName(appname, LAMBDA.BASE_NAME, stage);
   const managedPolicyName = createResourceName(appname, "GithubActionsPolicy", stage);
@@ -32,10 +33,12 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
         sid: 'S3Access',
         actions: ['s3:GetObject', 's3:PutObject', 's3:DeleteObject', 's3:ListBucket'],
         resources: [
-          `arn:aws:s3:::${bucketName}`,
-          `arn:aws:s3:::${bucketName}/*`,
+          `arn:aws:s3:::${frontendBucketName}`,
+          `arn:aws:s3:::${frontendBucketName}/*`,
+		  `arn:aws:s3:::${repoBucketName}`,
+          `arn:aws:s3:::${repoBucketName}/*`,
           `arn:aws:s3:::cdk-hnb659fds-assets-${account}-${region}`,
-          `arn:aws:s3:::cdk-hnb659fds-assets-${account}-${region}/*`,
+          `arn:aws:s3:::cdk-hnb659fds-assets-${account}-${region}/*`
         ],
       }),
 
