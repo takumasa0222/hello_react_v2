@@ -34,6 +34,8 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
         resources: [
           `arn:aws:s3:::${bucketName}`,
           `arn:aws:s3:::${bucketName}/*`,
+          "arn:aws:s3:::cdk-hnb659fds-assets-${aws:accountId}-${aws:region}",
+          "arn:aws:s3:::cdk-hnb659fds-assets-${aws:accountId}-${aws:region}/*"
         ],
       }),
 
