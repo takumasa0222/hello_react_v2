@@ -34,8 +34,8 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
         resources: [
           `arn:aws:s3:::${bucketName}`,
           `arn:aws:s3:::${bucketName}/*`,
-          "arn:aws:s3:::cdk-hnb659fds-assets-${aws:accountId}-${aws:region}",
-          "arn:aws:s3:::cdk-hnb659fds-assets-${aws:accountId}-${aws:region}/*"
+          `arn:aws:s3:::cdk-hnb659fds-assets-${account}-${region}`,
+          `arn:aws:s3:::cdk-hnb659fds-assets-${account}-${region}/*`,
         ],
       }),
 
@@ -74,7 +74,15 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
           `arn:aws:ssm:${region}:${account}:parameter/cdk-bootstrap/*`,
         ],
       }),
-      
+
+      new iam.PolicyStatement({
+        sid: 'CdkBootstrapAssumeRoles',
+        actions: ['sts:AssumeRole'],
+        resources: [
+          `arn:aws:iam::${account}:role/cdk-hnb659fds-deploy-role-${account}-${region}`,
+          `arn:aws:iam::${account}:role/cdk-hnb659fds-file-publishing-role-${account}-${region}`,
+        ],
+      }),
     ],
   });
 }
