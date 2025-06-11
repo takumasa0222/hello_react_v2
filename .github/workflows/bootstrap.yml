@@ -56,9 +56,7 @@ jobs:
         working-directory: ./${{ vars.CDK_DIR }}
         run: |
           npx cdk bootstrap \
-          --trust ${{
-            format('github.com/{0}', github.repository)
-          }} \
+          --trust "arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:oidc-provider/token.actions.githubusercontent.com"
           --cloudformation-execution-policies arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:policy/${{ github.event.inputs.appname }}-GithubActionsPolicy-${{ github.event.inputs.stage }} \
           aws://${{ vars.AWS_ACCOUNT_ID }}/${{ vars.AWS_REGION }}
 
