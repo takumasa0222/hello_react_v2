@@ -18,11 +18,11 @@ import { DatabaseStack } from './stacks/db/database-stack';
 export class AppStage extends cdk.Stage  {
     constructor(scope: Construct, id: string, props: StageStackProps) {
         super(scope, id, props);
-		const databaseStackName =  createResourceName(props.appname, "DB", props.stage).toLowerCase();
+		const databaseStackName =  createResourceName(props.appname, "DB", props.stage);
 		new DatabaseStack(this, databaseStackName, props)
-		const backendStackName =  createResourceName(props.appname, "Backend", props.stage).toLowerCase();
+		const backendStackName =  createResourceName(props.appname, "Backend", props.stage);
         new BackendStack(this, backendStackName, props);
-		const frontendStackName =  createResourceName(props.appname, "Frontend", props.stage).toLowerCase();
+		const frontendStackName =  createResourceName(props.appname, "Frontend", props.stage);
         new FrontendStack(this, frontendStackName, props);
 
         // const dynamo = new DynamoDBConstruct(this, `${props.appname}-DynamoDB-${props.stage}`, props);

@@ -8,10 +8,11 @@ import { createResourceName } from "../../utils/naming";
 export class DatabaseStack extends Stack  {
 	constructor(scope: Construct, id: string, props: StageStackProps) {
 		super(scope, id, props);
-		if (props.stage != STAGES.PROD) {
+		if (props.stage == STAGES.PROD) {
 			const dynamodbName = createResourceName(props.appname, "DynamoDB", props.stage);
 			new DynamoDBGreetingsConstruct(this, dynamodbName, props);
-		} else {
+		} 
+		else {
 
 		}
 	}
