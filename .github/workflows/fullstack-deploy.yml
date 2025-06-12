@@ -53,14 +53,6 @@ jobs:
         --context appname=${{ github.event.inputs.appname }} \
         --outputs-file ../cdk-outputs.json
 
-    # - name: Get Code repo S3 bucket name
-    #   run: |
-    #     STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
-    #     echo "Detected Code repo STACK_NAME: $STACK_NAME"
-    #     REPO_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].RepoBucketName' cdk-outputs.json)
-    #     echo "REPO_BUCKET_NAME=$REPO_BUCKET_NAME" >> $GITHUB_ENV
-    #     cat cdk-outputs.json
-
     - name: Upload and get S3 versionId
       id: upload
       run: |

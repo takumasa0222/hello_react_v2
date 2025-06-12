@@ -3,7 +3,7 @@ export const API = {
 };
 
 export const MESSAGES = {
-	LOADING: 'Loading...',
+	LOADING: 'Loading contents...',
 	FIELD_NOT_FOUND: 'message field not found in response',
 };
 
