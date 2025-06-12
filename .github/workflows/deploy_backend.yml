@@ -35,7 +35,7 @@ jobs:
          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Build backend
-        run: cd ${{ vars.BACKEND_DIR }} && npm run build && npm run zip
+        run: cd ${{ vars.BACKEND_DIR }} &&  npm ci && npm run build && npm run zip
 
       - name: Upload and get S3 versionId
         id: upload
