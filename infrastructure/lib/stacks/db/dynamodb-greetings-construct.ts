@@ -4,7 +4,7 @@ import { StageStackProps } from '../../interfaces/stack-props';
 import { DYNAMODB } from '../../constants/dynamodb.constants';
 import { createResourceName } from '../../utils/naming';
 
-export class DynamoDBGreetomgsConstruct extends Construct {
+export class DynamoDBGreetingsConstruct extends Construct {
 	public readonly table: dynamodb.Table;
 
 	constructor (scope: Construct, id: string, props: StageStackProps) {

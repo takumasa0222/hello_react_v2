@@ -27,6 +27,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
+        cache: 'npm'
 
     - name: Install dependencies
       run: |
@@ -53,19 +54,19 @@ jobs:
         --context appname=${{ github.event.inputs.appname }} \
         --outputs-file ../cdk-outputs.json
 
-    - name: Get Code repo S3 bucket name
-      run: |
-        STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
-        echo "Detected Code repo STACK_NAME: $STACK_NAME"
-        REPO_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].RepoBucketName' cdk-outputs.json)
-        echo "REPO_BUCKET_NAME=$REPO_BUCKET_NAME" >> $GITHUB_ENV
-        cat cdk-outputs.json
+    # - name: Get Code repo S3 bucket name
+    #   run: |
+    #     STACK_NAME=$(jq -r 'keys[0]' cdk-outputs.json)
+    #     echo "Detected Code repo STACK_NAME: $STACK_NAME"
+    #     REPO_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].RepoBucketName' cdk-outputs.json)
+    #     echo "REPO_BUCKET_NAME=$REPO_BUCKET_NAME" >> $GITHUB_ENV
+    #     cat cdk-outputs.json
 
     - name: Upload and get S3 versionId
       id: upload
       run: |
         OUTPUT=$(aws s3api put-object \
-          --bucket $REPO_BUCKET_NAME \
+          --bucket ${{ github.event.inputs.appname }}-lambda-code-repo-${{ github.event.inputs.stage }} \
           --key "${{ github.event.inputs.appname }}/${{ github.event.inputs.stage }}/lambda-backend.zip" \
           --body "${{ vars.BACKEND_DIR }}/lambda-backend.zip" \
           --output json)
@@ -86,17 +87,17 @@ jobs:
       working-directory: ${{ vars.FRONTEND_DIR }}
       run: npm run build
 
-    - name: Get S3 front bucket name
-      run: |
-        STACK_NAME=$(jq -r 'to_entries[] | select(.value.FrontendBucketName != null) | .key' cdk-outputs.json | head -n 1)
-        echo "Detected STACK_NAME: $STACK_NAME"
-        FRONT_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
-        echo "FRONT_BUCKET_NAME=$FRONT_BUCKET_NAME" >> $GITHUB_ENV
-        cat cdk-outputs.json
+    # - name: Get S3 front bucket name
+    #   run: |
+    #     STACK_NAME=$(jq -r 'to_entries[] | select(.value.FrontendBucketName != null) | .key' cdk-outputs.json | head -n 1)
+    #     echo "Detected STACK_NAME: $STACK_NAME"
+    #     FRONT_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
+    #     echo "FRONT_BUCKET_NAME=$FRONT_BUCKET_NAME" >> $GITHUB_ENV
+    #     cat cdk-outputs.json
 
     - name: Upload React build to S3
       run: |
-        aws s3 sync ${{ vars.FRONTEND_DIR }}/build s3://$FRONT_BUCKET_NAME --delete --region $AWS_REGION
+        aws s3 sync ${{ vars.FRONTEND_DIR }}/build s3://${{ github.event.inputs.appname }}-frontend-${{ github.event.inputs.stage }} --delete --region $AWS_REGION
 
     - name: Finish
       run: echo "Deployment complete for app name ${{ github.event.inputs.appname }} stage ${{ github.event.inputs.stage }}"

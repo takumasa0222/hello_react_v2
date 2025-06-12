@@ -17,15 +17,18 @@ export class FrontendStack extends Stack {
 			appname: props.appname,
 			stage: props.stage
 		});
-		new CloudFrontConstruct(this, `${props.appname}-Cloudfront-${props.stage}`, {
+		const cloudFrontDist = new CloudFrontConstruct(this, `${props.appname}-Cloudfront-${props.stage}`, {
 			appname: props.appname,
 			stage: props.stage,
 			bucket: frontendS3.bucket,
 			apiDomainName: `${apigwRestApiId}.execute-api.${cdk.Stack.of(this).region}.amazonaws.com`,
 		});
 		
-		new cdk.CfnOutput(this, 'FrontendBucketName', {
-			value:frontendS3.bucket.bucketName,
+		// frontend/cloudfront-construct.ts または frontend-stack.ts にて
+		new cdk.CfnOutput(this, 'CloudFrontDistributionIdOutput', {
+			exportName: `${props.appname}-CloudFrontDistributionId-${props.stage}`, // stage ごとに出し分け
+			value: cloudFrontDist.distribution.distributionId,
 		});
+  
 	}
 } 
