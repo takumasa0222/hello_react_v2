@@ -79,8 +79,7 @@ jobs:
         --require-approval never \
         --context stage=${{ github.event.inputs.stage }} \
         --context appname=${{ github.event.inputs.appname }} \
-        --context codeVersionId=${{ steps.upload.outputs.version_id }} \
-        --outputs-file ../cdk-outputs.json
+        --context codeVersionId=${{ steps.upload.outputs.version_id }} 
 
     - name: frontend build
       working-directory: ${{ vars.FRONTEND_DIR }}

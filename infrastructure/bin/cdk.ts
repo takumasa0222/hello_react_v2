@@ -21,15 +21,10 @@ const commonEnv = {
 	env: commonEnv,
   };
   
-  new DatabaseStack(app, createResourceName(appname, 'DB', stage), commonProps);
-  new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
-  new FrontendStack(app, createResourceName(appname, 'Frontend', stage), commonProps);
-
-// new AppStage(app, stagename, {
-//   stage: stage,
-//   appname: appname,
-//   env: { account: process.env.CDK_DEFAULT_ACCOUNT, 
-// 		region: process.env.CDK_DEFAULT_REGION || "ap-northeast-1"},
-
-// });
+  const dbStack = new DatabaseStack(app, createResourceName(appname, 'DB', stage), commonProps);
+  const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
+  const frontendStack = new FrontendStack(app, createResourceName(appname, 'Frontend', stage), commonProps);
+  
+  backendStack.addDependency(dbStack);
+  frontendStack.addDependency(backendStack);
 
