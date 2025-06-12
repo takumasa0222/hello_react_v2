@@ -2,7 +2,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { BackendCodeS3Construct } from '../lib/stacks/shared/repository-s3-construct';
-import { StageStackProps } from '../lib/types/stack-props';
+import { StageStackProps } from '../lib/interfaces/stack-props';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 
 const app = new cdk.App();

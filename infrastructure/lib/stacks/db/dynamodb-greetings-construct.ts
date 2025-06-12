@@ -1,10 +1,10 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
-import { StageStackProps } from '../../types/stack-props';
+import { StageStackProps } from '../../interfaces/stack-props';
 import { DYNAMODB } from '../../constants/dynamodb.constants';
 import { createResourceName } from '../../utils/naming';
 
-export class DynamoDBConstruct extends Construct {
+export class DynamoDBGreetomgsConstruct extends Construct {
 	public readonly table: dynamodb.Table;
 
 	constructor (scope: Construct, id: string, props: StageStackProps) {
@@ -22,5 +22,6 @@ export class DynamoDBConstruct extends Construct {
 			},
 			billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
 		});
+		
 	}
 }

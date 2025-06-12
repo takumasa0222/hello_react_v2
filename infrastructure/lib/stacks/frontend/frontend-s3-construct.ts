@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { BaseS3Bucket } from '../../interfaces/base-s3-construct';
-import { StageStackProps } from '../../types/stack-props';
+import { StageStackProps } from '../../interfaces/stack-props';
 import { S3 as S3_CONST } from '../../constants/s3.constants'
 
 export class FrontendS3Construct extends BaseS3Bucket {

@@ -10,12 +10,9 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Skip deploy
-        run: |
-          echo "Skipping deployment..."
-          exit 0
 
       - uses: actions/checkout@v4
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/GitHubOIDCRole

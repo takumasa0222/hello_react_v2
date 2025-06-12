@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import { StageStackProps } from '../types/stack-props';
+import { StageStackProps } from './stack-props';
 import { createResourceName } from '../utils/naming';
 import { RemovalPolicy } from 'aws-cdk-lib';
 
