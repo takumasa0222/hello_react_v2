@@ -64,6 +64,20 @@ jobs:
         VERSION_ID=$(echo "$OUTPUT" | jq -r '.VersionId')
         echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
 
+
+    - name: Check if Export exists
+      id: export_check
+      run: |
+        EXPORT_NAME="greetings-ApigatewayId-prod"
+        EXPORT_EXISTS=$(aws cloudformation list-exports \
+        --query "Exports[?Name=='$EXPORT_NAME'] | length(@)" \
+        --output text)
+        if [ "$EXPORT_EXISTS" -eq 1 ]; then
+          echo "apigwExportExist=true" >> $GITHUB_OUTPUT
+        else
+          echo "apigwExportExist=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Deploy infrastructure via CDK
       run: |
         cd ${{ vars.CDK_DIR }}
@@ -71,19 +85,13 @@ jobs:
         --require-approval never \
         --context stage=${{ github.event.inputs.stage }} \
         --context appname=${{ github.event.inputs.appname }} \
-        --context codeVersionId=${{ steps.upload.outputs.version_id }} 
+        --context codeVersionId=${{ steps.upload.outputs.version_id }} \
+        --context apigwExportExist=steps.export_check.outputs.apigwExportExist
 
     - name: frontend build
       working-directory: ${{ vars.FRONTEND_DIR }}
       run: npm run build
 
-    # - name: Get S3 front bucket name
-    #   run: |
-    #     STACK_NAME=$(jq -r 'to_entries[] | select(.value.FrontendBucketName != null) | .key' cdk-outputs.json | head -n 1)
-    #     echo "Detected STACK_NAME: $STACK_NAME"
-    #     FRONT_BUCKET_NAME=$(jq -r --arg key "$STACK_NAME" '.[$key].FrontendBucketName' cdk-outputs.json)
-    #     echo "FRONT_BUCKET_NAME=$FRONT_BUCKET_NAME" >> $GITHUB_ENV
-    #     cat cdk-outputs.json
 
     - name: Upload React build to S3
       run: |
