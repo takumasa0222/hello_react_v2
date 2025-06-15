@@ -68,7 +68,7 @@ jobs:
     - name: Check if Export exists
       id: export_check
       run: |
-        EXPORT_NAME="greetings-ApigatewayId-prod"
+        EXPORT_NAME="${{ github.event.inputs.appname }}-MessageApi-${{ github.event.inputs.stage }}"
         EXPORT_EXISTS=$(aws cloudformation list-exports \
         --query "Exports[?Name=='$EXPORT_NAME'] | length(@)" \
         --output text)
