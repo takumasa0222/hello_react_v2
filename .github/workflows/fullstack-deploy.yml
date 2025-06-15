@@ -53,6 +53,21 @@ jobs:
         --context appname=${{ github.event.inputs.appname }} \
         --outputs-file ../cdk-outputs.json
 
+    - name: (for Dev) Upload to S3 
+      if: ${{ github.event.inputs.stage == 'dev' }}
+      run: |
+        aws s3 cp lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
+
+    - name: (For Dev) Update Lambda Code
+      if: ${{ github.event.inputs.stage == 'dev' }}
+      run: |
+        aws lambda update-function-code \
+        --function-name greetings-GreetingFunction-dev \
+        --s3-bucket ${{ github.event.inputs.appname }}-lambda-code-repo-dev \
+        --s3-key ${{ github.event.inputs.appname }}/dev/lambda-backend.zip \
+        --publish
+
+
     - name: Upload and get S3 versionId
       id: upload
       run: |
@@ -72,7 +87,7 @@ jobs:
         --require-approval never \
         --context stage=${{ github.event.inputs.stage }} \
         --context appname=${{ github.event.inputs.appname }} \
-        --context codeVersionId=${{ steps.upload.outputs.version_id }} 
+        --context codeVersionId=${{ steps.upload.outputs.version_id || 'unknown'}} 
 
     - name: frontend build
       working-directory: ${{ vars.FRONTEND_DIR }}

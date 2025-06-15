@@ -6,6 +6,7 @@ import { LAMBDA, LAMBDA_ENV } from '../../constants/lambda.constants';
 import { createResourceName } from '../../utils/naming';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import { STAGES } from '../../constants';
 
 interface LambdaStackProps extends StageStackProps {
 	tableName: string;
@@ -23,8 +24,14 @@ export class LambdaConstruct extends Construct {
 		this.fn = new lambda.Function(this, 'Function', {
 			functionName,
 			runtime: lambda.Runtime.NODEJS_22_X,
-			code : lambda.Code.fromBucketV2(props.bucket, `${props.appname}/${props.stage}${LAMBDA.CODE_ASSET_PATH}`, 
-			  {objectVersion: codeVersionId }),
+			code : props.stage === STAGES.PROD
+			  ? lambda.Code.fromBucketV2(
+				props.bucket, 
+				`${props.appname}/${props.stage}${LAMBDA.CODE_ASSET_PATH}`, 
+				{objectVersion: codeVersionId })
+			  : lambda.Code.fromBucket(
+				props.bucket,
+				`${props.appname}/${props.stage}${LAMBDA.CODE_ASSET_PATH}`),
 			handler: LAMBDA.HANDLER,
 			timeout: Duration.seconds(LAMBDA.TIMEOUT_SECONDS),
 			memorySize: LAMBDA.MEMORY_MB,

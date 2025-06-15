@@ -3,6 +3,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import { StageStackProps } from './stack-props';
 import { createResourceName } from '../utils/naming';
 import { RemovalPolicy } from 'aws-cdk-lib';
+import { STAGES } from '../constants';
 
 export interface BaseS3Props extends StageStackProps {
 	purpose: string;
@@ -20,8 +21,8 @@ export class BaseS3Bucket extends Construct {
 		this.bucket = new s3.Bucket(this, 'Bucket', {
 			bucketName,
 			versioned: props.versioned ?? false,
-			removalPolicy: props.stage === 'prod' ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-			autoDeleteObjects: props.stage === 'prod' ? false : true,
+			removalPolicy: props.stage === STAGES.PROD ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+			autoDeleteObjects: props.stage === STAGES.PROD ? false : true,
 		});
 	}
 }
