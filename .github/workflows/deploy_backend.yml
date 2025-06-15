@@ -49,19 +49,6 @@ jobs:
           echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
 
 
-      - name: Check if Export exists
-        id: export_check
-        run: |
-          EXPORT_NAME="${{ github.event.inputs.appname }}-MessageApi-${{ github.event.inputs.stage }}"
-          EXPORT_EXISTS=$(aws cloudformation list-exports \
-            --query "Exports[?Name=='$EXPORT_NAME'] | length(@)" \
-            --output text)
-            if [ "$EXPORT_EXISTS" -eq 1 ]; then
-              echo "apigwExportExist=true" >> $GITHUB_OUTPUT
-            else
-              echo "apigwExportExist=false" >> $GITHUB_OUTPUT
-            fi
-
       - name: CDK Deploy Backend
         working-directory: ./${{ vars.CDK_DIR }}
         run: |
@@ -69,5 +56,4 @@ jobs:
           --require-approval never \
           --context stage=${{ github.event.inputs.stage }} \
           --context appname=${{ github.event.inputs.appname }} \
-          --context codeVersionId=${{ steps.upload.outputs.version_id }} \
-          --context apigwExportExist=steps.export_check.outputs.apigwExportExist
+          --context codeVersionId=${{ steps.upload.outputs.version_id }}
