@@ -6,7 +6,7 @@ const stage = app.node.tryGetContext('stage') || 'dev';
 const appname = app.node.tryGetContext('appname');
 const apigwExportExist = app.node.tryGetContext('apigwExportExist');
 
-new BackendStack(app, `${appname}-BackendStack-${stage}`, {
+new BackendStack(app, `${appname}-Backend-${stage}`, {
   stage: stage,
   appname: appname,
   apigwExportExist: apigwExportExist,

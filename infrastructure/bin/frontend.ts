@@ -5,7 +5,7 @@ const app = new cdk.App();
 const stage = app.node.tryGetContext('stage') || 'dev';
 const appname = app.node.tryGetContext('appname');
 
-new FrontendStack(app, `${appname}-BackendStack-${stage}`, {
+new FrontendStack(app, `${appname}-Frontend-${stage}`, {
   stage: stage,
   appname: appname,
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, 
