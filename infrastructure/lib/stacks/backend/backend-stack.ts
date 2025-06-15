@@ -31,11 +31,11 @@ export class BackendStack extends Stack {
 		stage:props.stage,
 		lambdaFunction: lambda.fn
 	  });
-	  if (!props.apigwExportExist) {
+	//   if (!props.apigwExportExist) {
 	  	new cdk.CfnOutput(this, 'ApiGatewayIdOutput', {
 			exportName: apiGatewayName,
 			value: apigw.restApi.restApiId,
 	  	});
-	  }
+	//   }
 	}
   }

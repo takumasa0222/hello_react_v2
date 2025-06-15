@@ -39,20 +39,5 @@ export class ApiGatewayConstruct extends Construct {
 				authorizationType: apigw.AuthorizationType.NONE,
 			}
 		);
-		new cdk.CfnOutput(this, 'ApiGatewayUrl', {
-			value: this.restApi.url,
-		});
-
-		new cdk.CfnOutput(this, 'FullMessageEndpoint', {
-			value: `${this.restApi.url}${API_GATEWAY.PATH}`,
-		});
-
-		new cdk.CfnOutput(this, 'DebugPath', {
-			value: API_GATEWAY.PATH,
-		});
-
-		new cdk.CfnOutput(this, 'DebugMethod', {
-			value: API_GATEWAY.METHOD,
-		});
 	}
 }
