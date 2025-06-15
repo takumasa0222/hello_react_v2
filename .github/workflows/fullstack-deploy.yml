@@ -56,7 +56,7 @@ jobs:
     - name: (for Dev) Upload to S3 
       if: ${{ github.event.inputs.stage == 'dev' }}
       run: |
-        aws s3 cp lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
+        aws s3 cp ${{ vars.BACKEND_DIR }}/lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
 
     - name: (For Dev) Update Lambda Code
       if: ${{ github.event.inputs.stage == 'dev' }}
@@ -69,6 +69,7 @@ jobs:
 
 
     - name: Upload and get S3 versionId
+      if: ${{ github.event.inputs.stage != 'dev' }}
       id: upload
       run: |
         OUTPUT=$(aws s3api put-object \
