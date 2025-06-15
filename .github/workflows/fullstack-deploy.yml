@@ -58,14 +58,14 @@ jobs:
       run: |
         aws s3 cp ${{ vars.BACKEND_DIR }}/lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
 
-    - name: (For Dev) Update Lambda Code
-      if: ${{ github.event.inputs.stage == 'dev' }}
-      run: |
-        aws lambda update-function-code \
-        --function-name greetings-GreetingFunction-dev \
-        --s3-bucket ${{ github.event.inputs.appname }}-lambda-code-repo-dev \
-        --s3-key ${{ github.event.inputs.appname }}/dev/lambda-backend.zip \
-        --publish
+    # - name: (For Dev) Update Lambda Code
+    #   if: ${{ github.event.inputs.stage == 'dev' }}
+    #   run: |
+    #     aws lambda update-function-code \
+    #     --function-name greetings-GreetingFunction-dev \
+    #     --s3-bucket ${{ github.event.inputs.appname }}-lambda-code-repo-dev \
+    #     --s3-key ${{ github.event.inputs.appname }}/dev/lambda-backend.zip \
+    #     --publish
 
 
     - name: Upload and get S3 versionId
