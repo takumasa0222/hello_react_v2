@@ -17,8 +17,8 @@ export class GithubOidcRoleStack extends Stack {
     const GITHUB_REPO = githubRepo;
     const roleName = createResourceName(appname, IAM.BASE_ROLE_NAME, stage);
 
-	const providerArn = `arn:aws:iam::${cdk.Stack.of(scope).account}:oidc-provider/token.actions.githubusercontent.com`;
-	const oidcProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, 'ImportedGithubOidcProvider', providerArn);;
+	const providerArn = `arn:aws:iam::${cdk.Stack.of(this).account}:oidc-provider/token.actions.githubusercontent.com`;
+	const oidcProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(this, 'ImportedGithubOidcProvider', providerArn);;
 
     // const oidcProvider = new iam.OpenIdConnectProvider(this, 'GithubOidcProvider', {
     //   url: `https://${GITHUB_OIDC_PROVIDER_URL}`,
