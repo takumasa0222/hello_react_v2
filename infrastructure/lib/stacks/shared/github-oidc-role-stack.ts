@@ -4,22 +4,26 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { IAM } from '../../constants/iam.constants';
 import { createResourceName } from '../../utils/naming';
 import { createGithubActionsPolicy } from '../../policies/github-actions-policy';
+import { StageStackProps } from '../../interfaces/stack-props';
 
 export class GithubOidcRoleStack extends Stack {
-  constructor(scope: cdk.App, id: string, props?: StackProps) {
+  constructor(scope: cdk.App, id: string, props: StageStackProps) {
     super(scope, id, props);
-    const appname = this.node.tryGetContext("appname");
-    const stage = this.node.tryGetContext("stage");
+    const appname = props.appname;
+    const stage =  props.stage;
     const githubRepo = this.node.tryGetContext("github_repository");
 
     const GITHUB_OIDC_PROVIDER_URL = 'token.actions.githubusercontent.com';
     const GITHUB_REPO = githubRepo;
-    const roleName = createResourceName(appname, IAM.BASE_NAME, stage);
+    const roleName = createResourceName(appname, IAM.BASE_ROLE_NAME, stage);
 
-    const oidcProvider = new iam.OpenIdConnectProvider(this, 'GithubOidcProvider', {
-      url: `https://${GITHUB_OIDC_PROVIDER_URL}`,
-      clientIds: ['sts.amazonaws.com'],
-    });
+	const providerArn = `arn:aws:iam::${cdk.Stack.of(scope).account}:oidc-provider/token.actions.githubusercontent.com`;
+	const oidcProvider = iam.OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, 'ImportedGithubOidcProvider', providerArn);;
+
+    // const oidcProvider = new iam.OpenIdConnectProvider(this, 'GithubOidcProvider', {
+    //   url: `https://${GITHUB_OIDC_PROVIDER_URL}`,
+    //   clientIds: ['sts.amazonaws.com'],
+    // });
 
     const githubRole = new iam.Role(this, 'GithubActionsRole', {
       roleName: roleName,
