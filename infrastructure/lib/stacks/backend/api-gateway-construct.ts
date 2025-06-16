@@ -4,8 +4,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { StageStackProps } from "../../interfaces/stack-props";
 import { API_GATEWAY } from "../../constants/api-gateway.constants";
 import { createResourceName } from "../../utils/naming";
-// import * as logs from 'aws-cdk-lib/aws-logs';
-import * as cdk from 'aws-cdk-lib';
+
 
 interface ApiGatwayStackProps extends StageStackProps {
 	lambdaFunction: lambda.Function;
