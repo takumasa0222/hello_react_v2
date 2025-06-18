@@ -95,6 +95,8 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
 		  'ec2:CreateSubnet',
 		  'ec2:DeleteSubnet',
 		  'ec2:DescribeSecurityGroups',
+		  'ec2:DescribeTags',
+		  'ec2:DescribeVpcs',
 		  'ec2:CreateSecurityGroup',
 		  'ec2:AuthorizeSecurityGroupIngress',
 		  'ec2:AuthorizeSecurityGroupEgress',
@@ -106,6 +108,14 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
 		],
 		resources: ['*'],
 	  }),
+	  new iam.PolicyStatement({
+		sid: 'Ec2DescribeAccess',
+		actions: [
+		  'ec2:DescribeAvailabilityZones',
+		],
+		resources: ['*'],
+	  }),
+	  
 	  new iam.PolicyStatement({
 		sid: 'RdsAccess',
 		actions: [
