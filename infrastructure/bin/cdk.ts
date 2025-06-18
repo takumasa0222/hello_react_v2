@@ -6,7 +6,7 @@ import { BackendStack } from '../lib/stacks/backend/backend-stack';
 import { FrontendStack } from '../lib/stacks/frontend/frontend-stack';
 import { NetworkStack } from '../lib/stacks/network/network-stack';
 import { STAGES } from '../lib/constants';
-import { BackendStackProps } from '../lib/interfaces/backend-props';
+import { DBStackprops } from '../lib/interfaces/database-props';
 
 const app = new cdk.App();
 const stage = app.node.tryGetContext('stage');
@@ -23,7 +23,7 @@ const commonEnv = {
 	env: commonEnv,
   };
 
-  let backendProps:BackendStackProps = {
+  let dbProps:DBStackprops = {
 	stage,
 	appname,
 	env: commonEnv,
@@ -32,15 +32,15 @@ const commonEnv = {
   let networkStack;
   if (stage == STAGES.PROD) {
   	networkStack = new NetworkStack(app, createResourceName(appname, 'Network', stage), commonProps);
-	backendProps = {
+	  dbProps = {
 		stage,
 		appname,
 		env: commonEnv,
 		vpc: networkStack.vpc
 	  };
   }
-  const dbStack = new DatabaseStack(app, createResourceName(appname, 'DB', stage), commonProps);
-  const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), backendProps);
+  const dbStack = new DatabaseStack(app, createResourceName(appname, 'DB', stage), dbProps);
+  const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
   const frontendStack = new FrontendStack(app, createResourceName(appname, 'Frontend', stage), commonProps);
   
   if (stage == STAGES.PROD && networkStack) {

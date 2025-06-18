@@ -8,10 +8,10 @@ import { AuroraClusterConstruct } from "./aurora-serverless-v2-construct";
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { VPC } from "../../constants/vpc.constants";
 import { AURORA } from "../../constants/auroracluster.constants";
-import { BackendStackProps } from "../../interfaces/backend-props";
+import { DBStackprops } from "../../interfaces/database-props";
 
 export class DatabaseStack extends Stack  {
-	constructor(scope: Construct, id: string, props: BackendStackProps) {
+	constructor(scope: Construct, id: string, props: DBStackprops) {
 		super(scope, id, props);
 
 		if (props.stage == STAGES.PROD) {
