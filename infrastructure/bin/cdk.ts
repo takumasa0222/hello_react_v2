@@ -29,23 +29,23 @@ const commonEnv = {
 	env: commonEnv,
   };
 
-  let networkStack;
-  if (stage == STAGES.PROD) {
-  	networkStack = new NetworkStack(app, createResourceName(appname, 'Network', stage), commonProps);
-	  dbProps = {
-		stage,
-		appname,
-		env: commonEnv,
-		vpc: networkStack.vpc
-	  };
-  }
+//   let networkStack;
+//   if (stage == STAGES.PROD) {
+//   	networkStack = new NetworkStack(app, createResourceName(appname, 'Network', stage), commonProps);
+// 	  dbProps = {
+// 		stage,
+// 		appname,
+// 		env: commonEnv,
+// 		vpc: networkStack.vpc
+// 	  };
+//   }
   const dbStack = new DatabaseStack(app, createResourceName(appname, 'DB', stage), dbProps);
   const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
   const frontendStack = new FrontendStack(app, createResourceName(appname, 'Frontend', stage), commonProps);
   
-  if (stage == STAGES.PROD && networkStack) {
-	dbStack.addDependency(networkStack);
-  }
+//   if (stage == STAGES.PROD && networkStack) {
+// 	dbStack.addDependency(networkStack);
+//   }
   backendStack.addDependency(dbStack);
   frontendStack.addDependency(backendStack);
 

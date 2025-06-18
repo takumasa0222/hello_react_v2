@@ -16,7 +16,7 @@ export class DatabaseStack extends Stack  {
 
 		if (props.stage == STAGES.PROD) {
 			const auroraName = createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage);
-			let vpc = props.vpc;
+			let vpc = props.vpc || undefined;
 			if (!vpc)
 			{
 				const vpcName= createResourceName(props.appname, VPC.BASE_NAME, props.stage);
