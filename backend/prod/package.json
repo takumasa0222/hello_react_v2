@@ -1,0 +1,20 @@
+{
+	"name": "lambda-backend",
+	"version": "1.0.0",
+	"type": "module",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc && cp package.json dist",
+		"zip": "cd dist && zip -r ../lambda-backend.zip ."
+	},
+	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.500.0",
+		"@aws-sdk/client-rds-data": "^3.830.0",
+		"@aws-sdk/lib-dynamodb": "^3.500.0"
+	},
+	"devDependencies": {
+		"@types/aws-lambda": "^8.10.122",
+		"@types/node": "^22.15.21",
+		"typescript": "^5.8.3"
+	}
+}

@@ -1,0 +1,43 @@
+name: Deploy DB Stack
+
+on:
+    workflow_dispatch:
+      inputs:
+        stage:
+          description: 'Environment stage'
+          required: true
+          default: 'prod'
+        appname:
+          description: 'Application name'
+          required: true
+          default: 'greetings'
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    permissions:
+        id-token: write
+        contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Assume Role with OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+         role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ github.event.inputs.appname }}-${{ vars.CDK_ROLE_NAME }}-${{ github.event.inputs.stage }}
+         role-session-name: GitHubActions
+         aws-region: ${{ vars.AWS_REGION }}
+
+      - name: CDK Deploy DB
+        working-directory: ./${{ vars.CDK_DIR }}
+        run: |
+          npm ci && npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/database.ts" \
+          --require-approval never \
+          --context stage=${{ github.event.inputs.stage }} \
+          --context appname=${{ github.event.inputs.appname }} 

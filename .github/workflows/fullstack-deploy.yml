@@ -32,10 +32,10 @@ jobs:
       run: |
         cd ${{ vars.CDK_DIR }} && npm ci
         cd ../${{ vars.FRONTEND_DIR }} && npm ci
-        cd ../${{ vars.BACKEND_DIR }} && npm ci
+        cd ../${{ vars.BACKEND_DIR }}/${{ github.event.inputs.stage }} && npm ci
 
     - name: Build backend
-      run: cd ${{ vars.BACKEND_DIR }} && npm run build && npm run zip
+      run: cd ${{ vars.BACKEND_DIR }}/${{ github.event.inputs.stage }} && npm run build && npm run zip
 
     - name: Assume Role with OIDC
       uses: aws-actions/configure-aws-credentials@v4
@@ -56,17 +56,7 @@ jobs:
     - name: (for Dev) Upload to S3 
       if: ${{ github.event.inputs.stage == 'dev' }}
       run: |
-        aws s3 cp ${{ vars.BACKEND_DIR }}/lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
-
-    # - name: (For Dev) Update Lambda Code
-    #   if: ${{ github.event.inputs.stage == 'dev' }}
-    #   run: |
-    #     aws lambda update-function-code \
-    #     --function-name greetings-GreetingFunction-dev \
-    #     --s3-bucket ${{ github.event.inputs.appname }}-lambda-code-repo-dev \
-    #     --s3-key ${{ github.event.inputs.appname }}/dev/lambda-backend.zip \
-    #     --publish
-
+        aws s3 cp ${{ vars.BACKEND_DIR }}/${{ github.event.inputs.stage }}/lambda-backend.zip s3://${{ github.event.inputs.appname }}-lambda-code-repo-dev/${{ github.event.inputs.appname }}/dev/lambda-backend.zip
 
     - name: Upload and get S3 versionId
       if: ${{ github.event.inputs.stage != 'dev' }}
@@ -75,7 +65,7 @@ jobs:
         OUTPUT=$(aws s3api put-object \
           --bucket ${{ github.event.inputs.appname }}-lambda-code-repo-${{ github.event.inputs.stage }} \
           --key "${{ github.event.inputs.appname }}/${{ github.event.inputs.stage }}/lambda-backend.zip" \
-          --body "${{ vars.BACKEND_DIR }}/lambda-backend.zip" \
+          --body "${{ vars.BACKEND_DIR }}/${{ github.event.inputs.stage }}/lambda-backend.zip" \
           --output json)
         VERSION_ID=$(echo "$OUTPUT" | jq -r '.VersionId')
         echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
