@@ -6,10 +6,12 @@ import { createResourceName } from "../../utils/naming";
 import { VPC } from "../../constants/vpc.constants";
 import { SecurityGroupConstruct } from "./security-group-construct";
 import { SECURITY_GROUP } from "../../constants/security-group.constants";
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
 // import { VPC_ENDPOINT } from "../../constants/vpc-endpoint.constants";
 // import { VpcEndpoint } from "./vpc-endpoint";
 
 export class NetworkStack extends Stack  {
+	public readonly vpc: ec2.Vpc;
 	constructor(scope: Construct, id: string, props: StageStackProps) {
 		super(scope, id, props);
 		const vpcName=  `${props.stage}-${VPC.BASE_NAME}`;
