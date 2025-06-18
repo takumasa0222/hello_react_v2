@@ -84,6 +84,7 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
         resources: [
           `arn:aws:iam::${account}:role/cdk-hnb659fds-deploy-role-${account}-${region}`,
           `arn:aws:iam::${account}:role/cdk-hnb659fds-file-publishing-role-${account}-${region}`,
+		  `arn:aws:iam::${account}:role/cdk-hnb659fds-lookup-role-${account}-${region}`,
         ],
       }),
 	  new iam.PolicyStatement({
