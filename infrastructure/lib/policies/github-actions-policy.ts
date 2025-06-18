@@ -86,6 +86,56 @@ export function createGithubActionsPolicy(stack: Stack, appname: string, stage: 
           `arn:aws:iam::${account}:role/cdk-hnb659fds-file-publishing-role-${account}-${region}`,
         ],
       }),
+	  new iam.PolicyStatement({
+		sid: 'VpcNetworkAccess',
+		actions: [
+		  'ec2:DescribeVpcs',
+		  'ec2:CreateVpc',
+		  'ec2:DescribeSubnets',
+		  'ec2:CreateSubnet',
+		  'ec2:DeleteSubnet',
+		  'ec2:DescribeSecurityGroups',
+		  'ec2:CreateSecurityGroup',
+		  'ec2:AuthorizeSecurityGroupIngress',
+		  'ec2:AuthorizeSecurityGroupEgress',
+		  'ec2:RevokeSecurityGroupIngress',
+		  'ec2:RevokeSecurityGroupEgress',
+		  'ec2:DeleteSecurityGroup',
+		  'ec2:CreateTags',
+		  'ec2:DeleteTags',
+		],
+		resources: ['*'],
+	  }),
+	  new iam.PolicyStatement({
+		sid: 'RdsAccess',
+		actions: [
+		  'rds:DescribeDBClusters',
+		  'rds:CreateDBCluster',
+		  'rds:DeleteDBCluster',
+		  'rds:ModifyDBCluster',
+		  'rds:DescribeDBInstances',
+		  'rds:CreateDBInstance',
+		  'rds:DeleteDBInstance',
+		  'rds:ModifyDBInstance',
+		  'rds:AddTagsToResource',
+		  'rds:RemoveTagsFromResource',
+		],
+		resources: ['*'],
+	  }),
+	  new iam.PolicyStatement({
+		sid: 'SecretsManagerAccess',
+		actions: [
+		  'secretsmanager:GetSecretValue',
+		  'secretsmanager:CreateSecret',
+		  'secretsmanager:UpdateSecret',
+		  'secretsmanager:DeleteSecret',
+		  'secretsmanager:DescribeSecret',
+		  'secretsmanager:TagResource',
+		],
+		resources: ['*'],
+	  }),
+	  
+	  
     ],
   });
 }
