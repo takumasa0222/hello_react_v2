@@ -15,7 +15,7 @@ export class AuroraClusterConstruct extends Construct {
 	const dbname = createDBName(props.appname, AURORA.BASE_DB_NAME, props.stage);
 	const clustername = createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage);
 	const clusterwritername = createResourceName(props.appname, AURORA.BASE_WRITER_INSTANCE_NAME, props.stage);
-	const clustersecretkeyname = createResourceName(props.appname, AURORA.BASE_KEY_NAME, props.stage);
+	const clustersecretkeyname = `${props.appname}${AURORA.BASE_KEY_NAME}${props.stage}`;
 	const secretname = createResourceName(props.appname, AURORA.BASE_SECRET_NAME, props.stage);
 	const dbSecretConstruct = new SecretConstruct(this, secretname, { 
 		username: clustersecretkeyname, 
