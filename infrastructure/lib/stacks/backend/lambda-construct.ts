@@ -32,7 +32,6 @@ export class LambdaConstruct extends Construct {
 			environment['SECRET_ARN'] = props.secretArn!;
 			environment['DB_NAME'] = props.dbName!;
 			environment['CLUSTER_ARN'] = props.clusterArn!;
-			environment['AWS_REGION'] = Stack.of(this).region;
 		}
 		  
 		this.fn = new lambda.Function(this, 'Function', {
