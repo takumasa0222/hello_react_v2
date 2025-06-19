@@ -6,7 +6,7 @@ const app = new cdk.App();
 const stage = app.node.tryGetContext('stage') || 'dev';
 const appname = app.node.tryGetContext('appname');
 
-new TableStack(app, `${appname}-Table-${stage}`,{
+new TableStack(app, `${appname}-TableSet-${stage}`,{
 	stage: stage,
 	appname: appname,
 	env: { account: process.env.CDK_DEFAULT_ACCOUNT, 
