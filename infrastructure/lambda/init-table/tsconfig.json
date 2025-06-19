@@ -6,7 +6,7 @@
 	  "esModuleInterop": true,
 	  "strict": true,
 	  "outDir": "dist",
-	  "types": []
+	  "types": ["node"]
 	},
 	"include": ["handler.ts", "greetings-script.constants.ts"]
   }
