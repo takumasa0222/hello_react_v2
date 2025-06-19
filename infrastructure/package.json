@@ -27,6 +27,7 @@
     "@aws-sdk/client-dynamodb": "^3.817.0",
     "@aws-sdk/client-rds-data": "^3.830.0",
     "@aws-sdk/lib-dynamodb": "^3.817.0",
+    "@types/cfn-response": "^1.0.8",
     "aws-cdk-lib": "^2.196.0",
     "constructs": "^10.4.2"
   }
