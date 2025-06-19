@@ -43,7 +43,7 @@ export class AuroraClusterConstruct extends Construct {
       defaultDatabaseName:dbname,
 	  credentials: rds.Credentials.fromSecret(dbSecretConstruct.secret),
 	  writer: rds.ClusterInstance.serverlessV2(clusterwritername),
-      serverlessV2MinCapacity: 0.0,
+      serverlessV2MinCapacity: 0.5,
       serverlessV2MaxCapacity: 1.0,
 	  enableDataApi: true,
     });
