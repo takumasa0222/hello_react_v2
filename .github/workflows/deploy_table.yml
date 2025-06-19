@@ -1,4 +1,4 @@
-name: Deploy DB Stack
+name: Deploy Table Stack
 
 on:
     workflow_dispatch:
@@ -34,11 +34,16 @@ jobs:
          role-session-name: GitHubActions
          aws-region: ${{ vars.AWS_REGION }}
 
- 
-      - name: CDK Deploy DB
+      - name: Build lambda table initialize code
         working-directory: ./${{ vars.CDK_DIR }}
+        if: ${{ github.event.inputs.stage != 'dev' }}
+        run: cd lambda/init-table && npm install && npm run build
+ 
+      - name: Deploy database table via CDK
+        if: ${{ github.event.inputs.stage != 'dev' }}
         run: |
-          npm ci && npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/database.ts" \
+          cd ${{ vars.CDK_DIR }}
+          npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/table.ts"\
           --require-approval never \
           --context stage=${{ github.event.inputs.stage }} \
           --context appname=${{ github.event.inputs.appname }} 

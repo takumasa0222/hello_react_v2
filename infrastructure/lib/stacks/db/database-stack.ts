@@ -9,8 +9,8 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { VPC } from "../../constants/vpc.constants";
 import { AURORA } from "../../constants/auroracluster.constants";
 import { DBStackprops } from "../../interfaces/database-props";
-import { TableInitializerConstruct } from "./table-initializer-construct";
-import { TABLE_INIT } from "../../constants/table.constants";
+
+
 
 export class DatabaseStack extends Stack  {
 	constructor(scope: Construct, id: string, props: DBStackprops) {
@@ -41,13 +41,6 @@ export class DatabaseStack extends Stack  {
 				value: auroraCluster.cluster.clusterArn,
 				exportName: createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage),
 			  });
-			// const tableInitiName= createResourceName(props.appname, TABLE_INIT.BASE_NAME, props.stage); 
-			// const tableInit = new TableInitializerConstruct(this, tableInitiName, {
-			// 	clusterArn:auroraCluster.cluster.clusterArn,
-			// 	appname:props.appname,
-			// 	stage: props.stage
-			// });
-			// tableInit.node.addDependency(auroraCluster);
 			  
 		} else {
 			const dynamodbName = createResourceName(props.appname, "DynamoDB", props.stage);

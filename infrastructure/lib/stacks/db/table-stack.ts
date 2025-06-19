@@ -3,7 +3,7 @@ import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 import { StageStackProps } from '../../interfaces/stack-props';
-import { AURORA, SECRET } from '../../constants/auroracluster.constants';
+import { AURORA } from '../../constants/auroracluster.constants';
 import { TableInitializerConstruct } from './table-initializer-construct';
 import { TABLE_INIT } from '../../constants/table.constants';
 

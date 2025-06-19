@@ -93,6 +93,15 @@ jobs:
         --context appname=${{ github.event.inputs.appname }} \
         --context codeVersionId=${{ steps.upload.outputs.version_id || 'unknown'}} 
 
+    - name: Deploy database table via CDK
+      if: ${{ github.event.inputs.stage != 'dev' }}
+      run: |
+        cd ${{ vars.CDK_DIR }}
+        npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/table.ts"\
+        --require-approval never \
+        --context stage=${{ github.event.inputs.stage }} \
+        --context appname=${{ github.event.inputs.appname }} 
+
     - name: frontend build
       working-directory: ${{ vars.FRONTEND_DIR }}
       run: npm run build

@@ -41,18 +41,18 @@ const commonEnv = {
 // 	  };
 //   }
   const dbStack = new DatabaseStack(app, createResourceName(appname, 'DB', stage), dbProps);
-  if (stage == STAGES.PROD)
-  {
-  	const tableStack = new TableStack(app, `${appname}-Database-${stage}`,{
-	  stage: stage,
-	  appname: appname,
-	  env: { account: process.env.CDK_DEFAULT_ACCOUNT, 
-	  region: process.env.CDK_DEFAULT_REGION || "ap-northeast-1"},
-	});
-	tableStack.addDependency(dbStack);
-  }
+//   if (stage == STAGES.PROD)
+//   {
+//   	const tableStack = new TableStack(app, `${appname}-Table-${stage}`,{
+// 	  stage: stage,
+// 	  appname: appname,
+// 	  env: { account: process.env.CDK_DEFAULT_ACCOUNT, 
+// 	  region: process.env.CDK_DEFAULT_REGION || "ap-northeast-1"},
+// 	});
+// 	tableStack.addDependency(dbStack);
+//   }
 
-	  const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
+  const backendStack = new BackendStack(app, createResourceName(appname, 'Backend', stage), commonProps);
   const frontendStack = new FrontendStack(app, createResourceName(appname, 'Frontend', stage), commonProps);
   
 //   if (stage == STAGES.PROD && networkStack) {
