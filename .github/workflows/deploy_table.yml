@@ -43,7 +43,7 @@ jobs:
         if: ${{ github.event.inputs.stage != 'dev' }}
         run: |
           cd ${{ vars.CDK_DIR }}
-          npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/table.ts"\
+          npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/table.ts" \
           --require-approval never \
           --context stage=${{ github.event.inputs.stage }} \
           --context appname=${{ github.event.inputs.appname }} 
