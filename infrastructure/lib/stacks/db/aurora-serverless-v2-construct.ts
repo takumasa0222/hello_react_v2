@@ -3,9 +3,10 @@ import { Construct } from 'constructs';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import { AuroraClusterConstructProps } from '../../interfaces/aurora-cluster-props';
 import { createDBName, createResourceName } from '../../utils/naming';
-import { AURORA } from '../../constants/auroracluster.constants';
+import { AURORA, SECRET } from '../../constants/auroracluster.constants';
 import { SecretConstruct } from '../shared/secret-construct';
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager';
+import * as cdk from 'aws-cdk-lib';
 
 export class AuroraClusterConstruct extends Construct {
   public readonly cluster: rds.DatabaseCluster;
@@ -25,7 +26,11 @@ export class AuroraClusterConstruct extends Construct {
 		stage:props.stage,
 		appname:props.appname
 	});
-	this.dbsecret = dbSecretConstruct.secret;
+
+	new cdk.CfnOutput(this, 'SecretArn', {
+		value: dbSecretConstruct.secret.secretArn,
+		exportName: createResourceName(props.appname, SECRET.BASE_DB_SECRET_NAME, props.stage),
+	  });
 
     this.cluster = new rds.DatabaseCluster(this, clustername, {
       engine: rds.DatabaseClusterEngine.auroraPostgres({

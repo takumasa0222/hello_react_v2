@@ -7,3 +7,8 @@ export const AURORA = {
 	BASE_SECRET_NAME: 'AuroraClusterSecret',
 };
 
+export const SECRET = {
+	BASE_DB_SECRET_NAME: 'auroraSecret',
+
+};
+

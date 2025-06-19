@@ -13,7 +13,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { createDataAPIPolicyStatement } from '../../policies/data-api-policy';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { STAGES } from '../../constants';
-import { AURORA } from '../../constants/auroracluster.constants';
+import { AURORA, SECRET } from '../../constants/auroracluster.constants';
 import * as rds from 'aws-cdk-lib/aws-rds';
 
 export class BackendStack extends Stack {
@@ -25,11 +25,11 @@ export class BackendStack extends Stack {
 	  const codeBucket = s3.Bucket.fromBucketAttributes(this, `${props.appname}-CodeBucket-${props.stage}`, {
 		bucketName: bucketName, 
 	  });
-	//   const secretname = createResourceName(props.appname, AURORA.BASE_SECRET_NAME, props.stage);
+	//   const secretname = createResourceName(props.appname, AURORA.BASE_SECRET_NAME, props.stage)
 	  const clustersecretkeyname = `${props.appname}${AURORA.BASE_RESOURCE_NAME}${props.stage}`;
 	  const secret = secretsmanager.Secret.fromSecretNameV2(this, 'ImportedSecret', clustersecretkeyname);
-	  const clustername = createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage);
-	  const clusterArn = `arn:aws:rds:${Stack.of(this).region}:${Stack.of(this).account}:cluster/${clustername}`;
+	  const clusterArn = cdk.Fn.importValue(createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage));
+	  const secretArn = cdk.Fn.importValue(createResourceName(props.appname, SECRET.BASE_DB_SECRET_NAME, props.stage));
 
 	  const dbname = createDBName(props.appname, AURORA.BASE_DB_NAME, props.stage);
 
@@ -38,7 +38,7 @@ export class BackendStack extends Stack {
 		stage:props.stage,
 		tableName: tableName, 
 		bucket: codeBucket,
-		secretArn: secret?.secretArn,
+		secretArn: secretArn,
 		dbName: dbname,
 		clusterArn: clusterArn
 	  });

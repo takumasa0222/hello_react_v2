@@ -1,5 +1,5 @@
 import { Stack } from "aws-cdk-lib";
-import { StageStackProps } from "../../interfaces/stack-props";
+import * as cdk from 'aws-cdk-lib';
 import { Construct } from "constructs";
 import { DynamoDBGreetingsConstruct } from "./dynamodb-greetings-construct";
 import { createResourceName } from "../../utils/naming";
@@ -29,12 +29,17 @@ export class DatabaseStack extends Stack  {
 			const subnetSelection = vpc.selectSubnets({
 				subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
 			  });
-			new AuroraClusterConstruct(this, auroraName, {
+			const auroraCluster = new AuroraClusterConstruct(this, auroraName, {
 				vpc: vpc,
 				subnets: subnetSelection.subnets,
 				appname:props.appname,
 				stage: props.stage
 			});
+			new cdk.CfnOutput(this, 'AuroraClusterArn', {
+				value: auroraCluster.cluster.clusterArn,
+				exportName: createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage),
+			  });
+			  
 		} else {
 			const dynamodbName = createResourceName(props.appname, "DynamoDB", props.stage);
 			new DynamoDBGreetingsConstruct(this, dynamodbName, props);
