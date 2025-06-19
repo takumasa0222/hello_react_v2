@@ -84,14 +84,31 @@ jobs:
         --context stage=${{ github.event.inputs.stage }} \
         --context appname=${{ github.event.inputs.appname }} 
 
-    - name: Deploy infrastructure via CDK
+    - name: CDK Diff and Conditional Deploy (Example)
+      working-directory: ./${{ vars.CDK_DIR }}
       run: |
-        cd ${{ vars.CDK_DIR }}
-        npx cdk deploy --all \
-        --require-approval never \
-        --context stage=${{ github.event.inputs.stage }} \
-        --context appname=${{ github.event.inputs.appname }} \
-        --context codeVersionId=${{ steps.upload.outputs.version_id || 'unknown'}} 
+        if ! npx cdk diff --all \
+            --context stage=${{ github.event.inputs.stage }} \
+            --context appname=${{ github.event.inputs.appname }} \
+            --quiet; then
+          echo "Changes detected, deploying..."
+          npx cdk deploy --all \
+            --require-approval never \
+            --context stage=${{ github.event.inputs.stage }} \
+            --context appname=${{ github.event.inputs.appname }} \
+            --context codeVersionId=${{ steps.upload.outputs.version_id || 'unknown'}}
+        else
+          echo "No changes detected. Skipping deployment."
+        fi
+
+    # - name: Deploy infrastructure via CDK
+    #   run: |
+    #     cd ${{ vars.CDK_DIR }}
+    #     npx cdk deploy --all \
+    #     --require-approval never \
+    #     --context stage=${{ github.event.inputs.stage }} \
+    #     --context appname=${{ github.event.inputs.appname }} \
+    #     --context codeVersionId=${{ steps.upload.outputs.version_id || 'unknown'}} 
 
     - name: Deploy database table via CDK
       if: ${{ github.event.inputs.stage != 'dev' }}
