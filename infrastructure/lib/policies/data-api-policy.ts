@@ -18,7 +18,7 @@ export function createDataAPIPolicyStatement(stack: Stack, appname: string, stag
 		'rds-data:RollbackTransaction'
 	  ],
     resources: [
-		`arn:aws:rds:${region}:${account}:cluster:${clusterName}`,
+		`arn:aws:rds:${region}:${account}:cluster:${clusterName}*`,
 	],
   })
 };
