@@ -70,6 +70,9 @@ jobs:
         VERSION_ID=$(echo "$OUTPUT" | jq -r '.VersionId')
         echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
 
+    - name: Build lambda table initialize code
+      working-directory: ./${{ vars.CDK_DIR }}
+      run: cd lambda/init-table && npm install && npx tsc
 
     - name: CDK Deploy network
       if: ${{ github.event.inputs.stage != 'dev' }}

@@ -34,6 +34,11 @@ jobs:
          role-session-name: GitHubActions
          aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Build lambda table initialize code
+        working-directory: ./${{ vars.CDK_DIR }}
+        run: cd lambda/init-table && npm install && npx tsc
+ 
+
       - name: CDK Deploy DB
         working-directory: ./${{ vars.CDK_DIR }}
         run: |
