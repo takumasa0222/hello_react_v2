@@ -6,7 +6,7 @@
 	  "esModuleInterop": true,
 	  "strict": true,
 	  "outDir": "dist",
-	  "types": ["aws-lambda", "node"]
+	  "types": []
 	},
 	"include": ["handler.ts", "greetings-script.constants.ts"]
   }

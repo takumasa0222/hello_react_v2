@@ -71,6 +71,7 @@ jobs:
         echo "version_id=$VERSION_ID" >> $GITHUB_OUTPUT
 
     - name: Build lambda table initialize code
+      if: ${{ github.event.inputs.stage != 'dev' }}
       working-directory: ./${{ vars.CDK_DIR }}
       run: cd lambda/init-table && npm install && npx tsc
 
