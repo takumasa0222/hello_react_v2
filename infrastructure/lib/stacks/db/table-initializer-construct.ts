@@ -36,6 +36,8 @@ export class TableInitializerConstruct extends Construct {
 	secret.grantRead(fn)
     new CustomResource(this, 'InitGreetingsTable', {
       serviceToken: fn.functionArn,
+	  serviceTimeout: Duration.seconds(60),
+	  
     });
   }
 }
