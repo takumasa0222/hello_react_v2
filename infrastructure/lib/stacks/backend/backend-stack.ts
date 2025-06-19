@@ -26,11 +26,10 @@ export class BackendStack extends Stack {
 		bucketName: bucketName, 
 	  });
 	//   const secretname = createResourceName(props.appname, AURORA.BASE_SECRET_NAME, props.stage)
-	  const clustersecretkeyname = `${props.appname}${AURORA.BASE_RESOURCE_NAME}${props.stage}`;
-	  const secret = secretsmanager.Secret.fromSecretNameV2(this, 'ImportedSecret', clustersecretkeyname);
+	//   const clustersecretkeyname = `${props.appname}${AURORA.BASE_RESOURCE_NAME}${props.stage}`;
 	  const clusterArn = cdk.Fn.importValue(createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage));
 	  const secretArn = cdk.Fn.importValue(createResourceName(props.appname, SECRET.BASE_DB_SECRET_NAME, props.stage));
-
+	  const secret = secretsmanager.Secret.fromSecretCompleteArn (this, 'ImportedSecret', secretArn);
 	  const dbname = createDBName(props.appname, AURORA.BASE_DB_NAME, props.stage);
 
 	  const lambda = new LambdaConstruct(this, `${props.appname}-Lambda-${props.stage}`, {
@@ -49,7 +48,7 @@ export class BackendStack extends Stack {
 	  	importedTable.grantReadData(lambda.fn);
 	  } else {
 		secret.grantRead(lambda.fn)
-		const dataapipolcy= createDataAPIPolicyStatement(this, props.appname, props.stage);
+		const dataapipolcy= createDataAPIPolicyStatement(clusterArn);
 		lambda.fn.addToRolePolicy(dataapipolcy);
 	  }
 
