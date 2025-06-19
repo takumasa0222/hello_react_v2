@@ -77,7 +77,7 @@ AWS 環境における命名規則に従うことによって、より柔軟に�
 ---
 
 ## ディレクトリ構成
-
+```
 hello_react_v2/
 ├── backend/ # Lambda 関数のソースコード
 ├── frontend/ # React アプリケーション
@@ -85,7 +85,7 @@ hello_react_v2/
 ├── .github/workflows/ # GitHub Actions 定義
 ├── .env.deploy # CI で読み込む定数ファイル
 └── cdk-outputs.json # CDK 実行時の出力ファイル
-
+```
 ---
 
 ## 技術スタック
