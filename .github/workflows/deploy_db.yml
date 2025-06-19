@@ -36,9 +36,9 @@ jobs:
 
       - name: Build lambda table initialize code
         working-directory: ./${{ vars.CDK_DIR }}
-        run: cd lambda/init-table && npm install && npx tsc
+        if: ${{ github.event.inputs.stage != 'dev' }}
+        run: cd lambda/init-table && npm install && npm run build
  
-
       - name: CDK Deploy DB
         working-directory: ./${{ vars.CDK_DIR }}
         run: |
