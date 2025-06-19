@@ -5,6 +5,6 @@ export const TABLE_SCRIPTS = {
   message TEXT NOT NULL,
   PRIMARY KEY (lang, type))`,
  INSERT_DEFAULT_VAL_SQL: `INSERT INTO greetings (lang, type, message)
-  VALUES ('en', 'hello', 'Hello World!!')
+  VALUES ('ja', 'default', 'Hello World!!')
   ON CONFLICT (lang, type) DO NOTHING;`
 }
