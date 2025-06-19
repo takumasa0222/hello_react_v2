@@ -3,7 +3,7 @@ import {
   ExecuteStatementCommand,
 } from '@aws-sdk/client-rds-data';
 import { CloudFormationCustomResourceEvent } from 'aws-lambda';
-import { TABLE_SCRIPTS } from './greetings-script.constants';
+import { TABLE_SCRIPTS } from './greetings-script.constants.js';
 
 const clusterArn = process.env.CLUSTER_ARN!;
 const secretArn = process.env.SECRET_ARN!;
@@ -16,7 +16,6 @@ export const handler = async (event: CloudFormationCustomResourceEvent) => {
   console.log(`Event type: ${event.RequestType}`);
 
   if (event.RequestType === 'Delete') {
-    // テーブル削除などの処理を入れたい場合はここに記載
     return { PhysicalResourceId: 'init-table-custom-resource' };
   }
 

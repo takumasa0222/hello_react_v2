@@ -17,7 +17,6 @@ interface Props extends StageStackProps{
 export class TableInitializerConstruct extends Construct {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
-	const region = cdk.Stack.of(this).region
 	const secretArn = cdk.Fn.importValue(createResourceName(props.appname, SECRET.BASE_DB_SECRET_NAME, props.stage));
     const secret = secretsmanager.Secret.fromSecretCompleteArn (this, 'ImportedSecret', secretArn);
 	const fn = new lambda.Function(this, 'TableInitFunction', {

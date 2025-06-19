@@ -1,0 +1,17 @@
+{
+	"name": "init-table",
+	"version": "1.0.0",
+	"type": "commonjs",
+	"main": "dist/handler.js",
+	"scripts": {
+	  "build": "tsc"
+	},
+	"dependencies": {
+	  "@aws-sdk/client-rds-data": "^3.500.0"
+	},
+	"devDependencies": {
+	  "typescript": "^5.4.0",
+	  "@types/aws-lambda": "^8.10.122"
+	}
+  }
+  
