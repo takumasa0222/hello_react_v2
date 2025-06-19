@@ -72,6 +72,7 @@ jobs:
 
 
     - name: CDK Deploy network
+      if: ${{ github.event.inputs.stage != 'dev' }}
       working-directory: ./${{ vars.CDK_DIR }}
       run: |
         npx cdk deploy --app "npx ts-node --prefer-ts-exts bin/network.ts" \
