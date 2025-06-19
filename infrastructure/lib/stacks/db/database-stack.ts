@@ -41,13 +41,13 @@ export class DatabaseStack extends Stack  {
 				value: auroraCluster.cluster.clusterArn,
 				exportName: createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage),
 			  });
-			const tableInitiName= createResourceName(props.appname, TABLE_INIT.BASE_NAME, props.stage); 
-			const tableInit = new TableInitializerConstruct(this, tableInitiName, {
-				clusterArn:auroraCluster.cluster.clusterArn,
-				appname:props.appname,
-				stage: props.stage
-			});
-			tableInit.node.addDependency(auroraCluster);
+			// const tableInitiName= createResourceName(props.appname, TABLE_INIT.BASE_NAME, props.stage); 
+			// const tableInit = new TableInitializerConstruct(this, tableInitiName, {
+			// 	clusterArn:auroraCluster.cluster.clusterArn,
+			// 	appname:props.appname,
+			// 	stage: props.stage
+			// });
+			// tableInit.node.addDependency(auroraCluster);
 			  
 		} else {
 			const dynamodbName = createResourceName(props.appname, "DynamoDB", props.stage);
