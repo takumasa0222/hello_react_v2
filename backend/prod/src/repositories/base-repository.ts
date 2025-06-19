@@ -1,6 +1,6 @@
 // repositories/base-repository.ts
 import { SqlParameter } from '@aws-sdk/client-rds-data';
-import { DBService } from '../services/db-service';
+import { DBService } from '../services/db-service.js';
 
 export abstract class BaseRepository<T> {
   constructor(

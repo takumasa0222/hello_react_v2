@@ -1,7 +1,7 @@
 // repositories/greetings.repository.ts
-import { BaseRepository } from './base-repository';
-import { Greeting } from '../models/greeting'
-import { DBService } from '../services/db-service';
+import { BaseRepository } from './base-repository.js';
+import { Greeting } from '../models/greeting.js'
+import { DBService } from '../services/db-service.js';
 
 export class GreetingsRepository extends BaseRepository<Greeting> {
   constructor(dbService: DBService) {

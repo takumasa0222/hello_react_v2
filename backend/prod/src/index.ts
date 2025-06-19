@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { STATUS_CODES, ERROR_MESSAGES, QUERIES, DEFAULT_HEADERS } from './constants.js';
+import { STATUS_CODES, ERROR_MESSAGES, DEFAULT_HEADERS } from './constants.js';
 import { GreetingsRepository } from './repositories/greetings.repository.js';
 import { DBService } from './services/db-service.js';
 

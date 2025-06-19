@@ -5,9 +5,11 @@ import { AuroraClusterConstructProps } from '../../interfaces/aurora-cluster-pro
 import { createDBName, createResourceName } from '../../utils/naming';
 import { AURORA } from '../../constants/auroracluster.constants';
 import { SecretConstruct } from '../shared/secret-construct';
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager';
 
 export class AuroraClusterConstruct extends Construct {
   public readonly cluster: rds.DatabaseCluster;
+  public readonly dbsecret: ISecret;
 
   constructor(scope: Construct, id: string, props: AuroraClusterConstructProps) {
     super(scope, id);
@@ -23,6 +25,7 @@ export class AuroraClusterConstruct extends Construct {
 		stage:props.stage,
 		appname:props.appname
 	});
+	this.dbsecret = dbSecretConstruct.secret;
 
     this.cluster = new rds.DatabaseCluster(this, clustername, {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
