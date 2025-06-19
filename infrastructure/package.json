@@ -13,6 +13,7 @@
     "deploy:regular": "cdk deploy --app 'node bin/cdk.js'"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.150",
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
     "aws-cdk": "2.1016.1",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.817.0",
+    "@aws-sdk/client-rds-data": "^3.830.0",
     "@aws-sdk/lib-dynamodb": "^3.817.0",
     "aws-cdk-lib": "^2.196.0",
     "constructs": "^10.4.2"

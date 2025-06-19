@@ -14,7 +14,7 @@ import { createDataAPIPolicyStatement } from '../../policies/data-api-policy';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { STAGES } from '../../constants';
 import { AURORA, SECRET } from '../../constants/auroracluster.constants';
-import * as rds from 'aws-cdk-lib/aws-rds';
+
 
 export class BackendStack extends Stack {
 	constructor(scope: Construct, id: string, props: StageStackProps) {
