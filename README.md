@@ -103,14 +103,14 @@ hello_react_v2/
 ## 環境変数
 Github リポジトリ変数に下記の値を設定いただくことで、動作します。
 ```markdown
-| Type             | Variable name           | 用途                    |
-|------------------|-------------------------|------------------------|
-| Variable         | `aws_account_id`        | AWS アカウント ID       |
-| Variable         | `aws_region`            | リージョン名            |
-| Variable         | `cdk_role_name`         | CDK 実行ロール名        |
-| Variable         | `cdk_dir`               | CDK のディレクトリ名     |
-| Variable         | `frontend_dir`          | フロントエンドのパス     |
-| Variable         | `backend_dir`           | バックエンドのパス       |
-| Secret（初回用）  | `aws_access_key_id`     | OIDC ロール作成時に使用  |
-| Secret（初回用）  | `aws_secret_access_key` | 同上                    |
+ Type             | Variable name           | 用途                   
+------------------|-------------------------|-----------------------
+ Variable         | `aws_account_id`        | AWS アカウント ID      
+ Variable         | `aws_region`            | リージョン名           
+ Variable         | `cdk_role_name`         | CDK 実行ロール名       
+ Variable         | `cdk_dir`               | CDK のディレクトリ名    
+ Variable         | `frontend_dir`          | フロントエンドのパス    
+ Variable         | `backend_dir`           | バックエンドのパス      
+ Secret（初回用）  | `aws_access_key_id`     | OIDC ロール作成時に使用 
+ Secret（初回用）  | `aws_secret_access_key` | 同上                   
 ---
