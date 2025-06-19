@@ -34,7 +34,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 	  return {
 		statusCode: STATUS_CODES.OK,
 		headers: DEFAULT_HEADERS,
-		body: JSON.stringify(greetings),
+		body: JSON.stringify(greetings[0]),
 	  };
 	} catch (err) {
 	  console.error('Error in handler:', err);

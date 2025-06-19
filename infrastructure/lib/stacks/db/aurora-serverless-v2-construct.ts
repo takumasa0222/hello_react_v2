@@ -40,7 +40,6 @@ export class AuroraClusterConstruct extends Construct {
       vpcSubnets: {
         subnets: props.subnets,
       },
-    //   securityGroups: [props.securityGroup],
       defaultDatabaseName:dbname,
 	  credentials: rds.Credentials.fromSecret(dbSecretConstruct.secret),
 	  writer: rds.ClusterInstance.serverlessV2(clusterwritername),
