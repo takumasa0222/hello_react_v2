@@ -29,7 +29,6 @@ export class TableInitializerConstruct extends Construct {
         CLUSTER_ARN: props.clusterArn,
         SECRET_ARN: secretArn,
         DB_NAME: TABLE_INIT.DEFAULT_TABLE_NAME,
-        AWS_REGION: region,
       },
     });
 	const dataapipolcy= createDataAPIPolicyStatement(props.clusterArn);
