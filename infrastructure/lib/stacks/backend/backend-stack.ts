@@ -26,7 +26,7 @@ export class BackendStack extends Stack {
 		bucketName: bucketName, 
 	  });
 	//   const secretname = createResourceName(props.appname, AURORA.BASE_SECRET_NAME, props.stage);
-	  const clustersecretkeyname = `${props.appname}${AURORA.BASE_KEY_NAME}${props.stage}`;
+	  const clustersecretkeyname = `${props.appname}${AURORA.BASE_RESOURCE_NAME}${props.stage}`;
 	  const secret = secretsmanager.Secret.fromSecretNameV2(this, 'ImportedSecret', clustersecretkeyname);
 	  const clustername = createResourceName(props.appname, AURORA.BASE_RESOURCE_NAME, props.stage);
 	  const clusterArn = `arn:aws:rds:${Stack.of(this).region}:${Stack.of(this).account}:cluster/${clustername}`;
