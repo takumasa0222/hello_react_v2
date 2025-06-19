@@ -102,13 +102,15 @@ hello_react_v2/
 
 ## 環境変数
 Github リポジトリ変数に下記の値を設定いただくことで、動作します。
-AWS_ACCOUNT_ID
-AWS_REGION
-CDK_ROLE_NAME
-CDK_DIR=infrastructure
-FRONTEND_DIR=frontend
-BACKEND_DIR=backend
-**初回実行時には、OIDC ロール作成のため以下の Secrets も登録する必要があります：**
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
+```markdown
+| Type             | Variable name           | 用途                          |
+|------------------|-------------------------|-------------------------------|
+| Variable         | `aws_account_id`        | AWS アカウント ID              |
+| Variable         | `aws_region`            | リージョン名（例: ap-northeast-1） |
+| Variable         | `cdk_role_name`         | CDK 実行ロール名             |
+| Variable         | `cdk_dir`               | CDK のディレクトリ名         |
+| Variable         | `frontend_dir`          | フロントエンドのパス         |
+| Variable         | `backend_dir`           | バックエンドのパス           |
+| Secret（初回用）  | `aws_access_key_id`     | OIDC ロール作成時に使用      |
+| Secret（初回用）  | `aws_secret_access_key` | 同上                        |
 ---
